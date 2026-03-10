@@ -1,0 +1,5 @@
+Hamburg;12.1\n
+Tokyo;9.3\n
+Hanoi;8.8\n
+Berlin;1.4\n
+WashingtonDC;8.3\n
