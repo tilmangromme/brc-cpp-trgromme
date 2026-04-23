@@ -12,6 +12,7 @@
 #include <chrono>
 #include <cstdint>
 #include <iomanip>
+#include <map>
 
 
 
@@ -19,7 +20,7 @@
 struct CityStats {
     int min;
     int max;
-    long long sum;
+    int64_t sum;
     std::uint64_t count;
     CityStats(int val)
     : min(val), max(val), sum(val), count(1) {}
@@ -36,16 +37,11 @@ struct CityStats {
 
 // to compile: g++ -std=c++17 main.cpp -O3 -o main_executable
 struct Reader {
-
-
-
     Reader(const std::filesystem::path& file_path) {
         data_path = file_path;
         buf.resize(BUF_SIZE);
         city_vals.reserve(1000000);
     }
-
-
     void establish_link() {
         //std::ifstream data_link(data_path, std::ios::binary);
         data_link.open(data_path, std::ios::binary);
@@ -125,10 +121,18 @@ struct Reader {
         }
     }
     void map_process() {
-        
+        //std::map<std::string, CityStats> sorted_city_vals(city_vals.begin(), city_vals.end());
+        std::vector<std::pair<std::string, CityStats>> entries(
+            city_vals.begin(), city_vals.end()
+        );
+        std::sort(entries.begin(), entries.end(),
+            [](const auto& a, const auto& b) {
+            return a.first < b.first;
+            });
+
         std::cout << std::fixed << std::setprecision(1);
         std::cout << "{";
-        for (const auto& [city, stats] : city_vals) {
+        for (const auto& [city, stats] : entries) {
             std::cout << city << "=" 
                       << stats.min / 10 << "." << abs(stats.min % 10) << "/"
                       << stats.mean() << "/"
@@ -157,7 +161,6 @@ struct Reader {
         }
         return sign * val;
     }
-    
     struct TransparentHash {
         using is_transparent = void;
         std::size_t operator()(std::string_view sv) const noexcept {
@@ -195,7 +198,6 @@ struct Reader {
 
 
 void orchestrator() {
-    
     std::string path = "../billionrowchallenge/1brc/data/measurements.txt";
     Reader reader(path);
     try {
@@ -205,10 +207,8 @@ void orchestrator() {
         return;
     }
     reader.text_to_mapping();
-    reader.map_process();
+    //reader.map_process();
 }
-
-
 int main(){
     auto start = std::chrono::steady_clock::now();
     orchestrator();
