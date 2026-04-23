@@ -206,7 +206,7 @@ void orchestrator() {
         return;
     }
     reader.text_to_mapping();
-    //reader.map_process();
+    reader.map_process();
 }
 int main(){
     
