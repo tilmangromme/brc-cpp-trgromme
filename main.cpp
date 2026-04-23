@@ -49,7 +49,6 @@ struct Reader {
             std::cerr << "Error: Could not open the file, check the file path\n";
             throw std::runtime_error("Faulty link terminates program");
         } 
-        std::cerr << "Opened file\n";
         
     }
     void text_to_mapping() {
@@ -210,10 +209,7 @@ void orchestrator() {
     //reader.map_process();
 }
 int main(){
-    auto start = std::chrono::steady_clock::now();
+    
     orchestrator();
-    auto end = std::chrono::steady_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Execution time: " << diff.count() << " ms\n";
     return 0;
 }
